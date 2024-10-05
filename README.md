@@ -32,3 +32,10 @@ The task was to check the primality of 1024 bit numbers. 1024 bit numbers are un
 ## GitHub Link
 [Github Repository](https://github.com/Hannan7812/Assignment01)
 
+## Screenshots
+# Task 1
+![Screenshot 1](Screenshots/ss_task1.png "Screenshot 1")
+# Task 2
+![Screenshot 2](Screenshots/ss1.png "Screenshot 2")
+![Screenshot 3](Screenshots/task2_ss2.png "Screenshot 3")
+![Screenshot 4](Screenshots/task2_ss3.png "Screenshot 4")
