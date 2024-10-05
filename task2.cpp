@@ -133,3 +133,168 @@ public:
         }
     }
 };
+
+class LinkedList {  
+public:
+    Node* head;
+    Node* tail;
+
+    LinkedList() {
+        this->head = NULL;
+        this->tail = NULL;
+    }
+
+    LinkedList(string data){
+        this->head = NULL;
+        this->tail = NULL;
+        int n = data.size() - 9;
+        int block_size = 9;
+        while (1){
+            if (n <= 0){
+                this->prependNode(data.substr(0, block_size + n));
+                break;
+            }
+            this->prependNode(data.substr(n, block_size));
+            n = n - block_size;
+        }
+    }
+
+    bool operator<(LinkedList* list){
+        int n1 = this->get_num_digits();
+        int n2 = list->get_num_digits();
+        if (n1 < n2){
+            return true;
+        }
+        else if (n1 > n2){
+            return false;
+        }
+        Node* temp1 = this->head;
+        Node* temp2 = list->head;
+        while (temp1 != NULL && temp2 != NULL){
+            if (temp1->data < temp2->data){
+                return true;
+            }
+            else if (temp1->data > temp2->data){
+                return false;
+            }
+            temp1 = temp1->next;
+            temp2 = temp2->next;
+        }
+        return false;
+    }
+
+    bool operator<(int n){
+        return this->operator<(new LinkedList(to_string(n)));
+    }
+
+    bool operator>(LinkedList* list){
+        int n1 = this->get_num_digits();
+        int n2 = list->get_num_digits();
+        if (n1 > n2){
+            return true;
+        }
+        else if (n1 < n2){
+            return false;
+        }
+        Node* temp1 = this->head;
+        Node* temp2 = list->head;
+        while (temp1 != NULL && temp2 != NULL){
+            if (temp1->data > temp2->data){
+                return true;
+            }
+            else if (temp1->data < temp2->data){
+                return false;
+            }
+            temp1 = temp1->next;
+            temp2 = temp2->next;
+        }
+        return false;
+    }
+
+    bool operator>(int n){
+        return this->operator>(new LinkedList(to_string(n)));
+    }
+
+    bool operator==(LinkedList* list){
+        int n1 = this->get_num_digits();
+        int n2 = list->get_num_digits();
+        if (n1 != n2){
+            return false;
+        }
+        Node* temp1 = this->head;
+        Node* temp2 = list->head;
+        while (temp1 != NULL && temp2 != NULL){
+            if (temp1->data != temp2->data){
+                return false;
+            }
+            temp1 = temp1->next;
+            temp2 = temp2->next;
+        }
+        return true;
+    }
+
+    bool operator==(int n){
+        return this->operator==(new LinkedList(to_string(n)));
+    }
+
+    void prependNode(string data) {
+        Node* newNode = new Node(data);
+        if (this->head == NULL) {
+            this->head = newNode;
+            this->tail = newNode;
+        }
+        else {
+            this->head->prev = newNode;
+            newNode->next = this->head;
+            this->head = newNode;
+        }
+    }
+
+    void prependNode(unsigned int data) {
+        Node* newNode = new Node(data);
+        if (this->head == NULL) {
+            this->head = newNode;
+            this->tail = newNode;
+        }
+        else {
+            this->head->prev = newNode;
+            newNode->next = this->head;
+            this->head = newNode;
+        }
+    }
+
+    void addNode(unsigned int data) {
+        Node* newNode = new Node(data);
+        if (this->head == NULL) {
+            this->head = newNode;
+            this->tail = newNode;
+        }
+        else {
+            this->tail->next = newNode;
+            newNode->prev = this->tail;
+            this->tail = newNode;
+        }
+    }
+
+    void addNode(string data) {
+        Node* newNode = new Node(data);
+        if (this->head == NULL) {
+            this->head = newNode;
+            this->tail = newNode;
+        }
+        else {
+            this->tail->next = newNode;
+            newNode->prev = this->tail;
+            this->tail = newNode;
+        }
+    }
+
+    void printList() {
+        Node* temp = this->head;
+        while (temp != NULL) {
+            temp->printNode();
+            temp = temp->next;
+        }
+        cout << endl;
+    }
+};
