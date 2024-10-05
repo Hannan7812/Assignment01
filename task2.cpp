@@ -7,17 +7,20 @@ using namespace std;
 
 class Node {
 public:
-    unsigned int data;
-    Node* next;
-    Node* prev;
+    unsigned int data; // Data stored in the node
+    Node* next; // Pointer to the next node
+    Node* prev; // Pointer to the previous node
 
+    // Constructor to initialize node with integer data
     Node(unsigned int data) {
         this->data = data;
         this->next = NULL;
         this->prev = NULL;
     }
 
+    // Constructor to initialize node with string data
     Node(string data) {
+        // Check if the string represents a number too large for a 32-bit integer
         if (data.size() == 10){
             if (data[0] == '3' || data[0] == '4' || data[0] == '5' || data[0] == '6' || data[0] == '7' || data[0] == '8' || data[0] == '9') {
                 cout << "Number is too large to store in 32 bit long integer" << endl;
@@ -78,13 +81,15 @@ public:
                 }
             }
         }
+        // Convert string to integer and initialize node
         this->data = stoi(data);
         this->next = NULL;
         this->prev = NULL;
     }
 
+    // Method to get the nth digit of the node's data. Required for arithmetic operations
     int getNthDigit(int n) {
-        if (n < 0 || n > 8) {
+        if (n < 0 || n > 8) { // Adjust the valid range
             cout << "Invalid digit number get" << endl;
             throw invalid_argument("N is not in the range of 0-8");
         }
@@ -97,13 +102,14 @@ public:
         return temp % 10;
     }
 
+    // Method to set the nth digit of the node's data. Required for arithmetic operations
     void setNthDigit(int n, int digit) {
-        if (n < 0 || n > 8) {
+        if (n < 0 || n > 8) { // Adjust the valid range
             cout << "Invalid digit number set" << endl;
             throw invalid_argument("N is not in the range of 0-8");
         }
         
-        if (digit < 0 || digit > 9) {
+        if (digit < 0 || digit > 9) { // Check valid digit
             cout << "Invalid digit value set" << endl;
             throw invalid_argument("Digit must be between 0 and 9");
         }
@@ -117,6 +123,7 @@ public:
         this->data = this->data - currentDigit * pow10 + digit * pow10;
     }
 
+    // Method to get the length of the integer stored in the node
     int getLengthofInt(){
         int temp = this->data;
         int count = 0;
@@ -127,6 +134,7 @@ public:
         return count;
     }
 
+    // Method to print the node's data
     void printNode() {
         for (int i = 8; i >= 0; i--) {
             cout << getNthDigit(i);
@@ -136,14 +144,16 @@ public:
 
 class LinkedList {  
 public:
-    Node* head;
-    Node* tail;
+    Node* head; // Pointer to the head of the linked list
+    Node* tail; // Pointer to the tail of the linked list
 
+    // Default constructor
     LinkedList() {
         this->head = NULL;
         this->tail = NULL;
     }
 
+    // Constructor to initialize linked list from a string
     LinkedList(string data){
         this->head = NULL;
         this->tail = NULL;
@@ -151,14 +161,17 @@ public:
         int block_size = 9;
         while (1){
             if (n <= 0){
+                // Add the remaining part of the string
                 this->prependNode(data.substr(0, block_size + n));
                 break;
             }
+            // Add blocks of 9 characters
             this->prependNode(data.substr(n, block_size));
             n = n - block_size;
         }
     }
 
+    // Overload the < operator to compare two linked lists
     bool operator<(LinkedList* list){
         int n1 = this->get_num_digits();
         int n2 = list->get_num_digits();
@@ -183,10 +196,12 @@ public:
         return false;
     }
 
+    // Overload the < operator to compare linked list with an integer
     bool operator<(int n){
         return this->operator<(new LinkedList(to_string(n)));
     }
 
+    // Overload the > operator to compare two linked lists
     bool operator>(LinkedList* list){
         int n1 = this->get_num_digits();
         int n2 = list->get_num_digits();
@@ -211,10 +226,12 @@ public:
         return false;
     }
 
+    // Overload the > operator to compare linked list with an integer
     bool operator>(int n){
         return this->operator>(new LinkedList(to_string(n)));
     }
 
+    // Overload the == operator to compare two linked lists
     bool operator==(LinkedList* list){
         int n1 = this->get_num_digits();
         int n2 = list->get_num_digits();
@@ -233,10 +250,12 @@ public:
         return true;
     }
 
+    // Overload the == operator to compare linked list with an integer
     bool operator==(int n){
         return this->operator==(new LinkedList(to_string(n)));
     }
 
+    // Method to prepend a node with string data
     void prependNode(string data) {
         Node* newNode = new Node(data);
         if (this->head == NULL) {
@@ -250,6 +269,7 @@ public:
         }
     }
 
+    // Method to prepend a node with integer data
     void prependNode(unsigned int data) {
         Node* newNode = new Node(data);
         if (this->head == NULL) {
@@ -263,6 +283,7 @@ public:
         }
     }
 
+    // Method to add a node with integer data at the end
     void addNode(unsigned int data) {
         Node* newNode = new Node(data);
         if (this->head == NULL) {
@@ -276,6 +297,7 @@ public:
         }
     }
 
+    // Method to add a node with string data at the end
     void addNode(string data) {
         Node* newNode = new Node(data);
         if (this->head == NULL) {
@@ -289,6 +311,7 @@ public:
         }
     }
 
+    // Method to print the linked list
     void printList() {
         Node* temp = this->head;
         while (temp != NULL) {
@@ -298,6 +321,7 @@ public:
         cout << endl;
     }
 
+    // Method to add another linked list to this linked list
     void add_to_this_linked_list(LinkedList* list){
         Node* temp1 = this->tail;
         Node* temp2 = list->tail;
@@ -321,6 +345,7 @@ public:
             temp2 = temp2->prev;
         }
         
+        // Handle remaining nodes in the second list
         while (temp2 != NULL){
             if (carry){
                 this->prependNode(temp2->data + 1);
@@ -334,6 +359,7 @@ public:
         }
     }
 
+    // Method to get the nth digit of the linked list
     int getNthdigit(int n){
         if (n >= this->get_num_digits()){
             return 0;
@@ -347,6 +373,7 @@ public:
         return temp->getNthDigit(loc_within_node);
     }
 
+    // Method to set the nth digit of the linked list
     void setNthdigit(int n, int digit){
         Node* temp = this->tail;
         int loc_within_node = n % 9;
@@ -357,6 +384,7 @@ public:
         temp->setNthDigit(loc_within_node, digit);
     }
 
+    // Method to add two linked lists and return the result
     LinkedList* add_linked_list(LinkedList* list){
         int l1 = this->get_num_digits();
         int l2 = list->get_num_digits();
@@ -385,6 +413,7 @@ public:
         return to_ret;
     }
 
+    // Method to get the total number of digits in the linked list
     int get_num_digits(){
         int count = 0;
         Node* temp = this->head;
@@ -395,6 +424,7 @@ public:
         return count;
     }
 
+    // Method to subtract one linked list from another and return the result
     LinkedList* subtract(LinkedList* list){
         int l1 = this->get_num_digits();
         int l2 = list->get_num_digits();
@@ -522,12 +552,13 @@ public:
         return result;
     }
 
+    // Static method to find the remainder of one linked list divided by another
     static LinkedList* mod(LinkedList* dividend, LinkedList* divisor){
         if (dividend->operator==(divisor)){
-            return new LinkedList("0");  
+            return new LinkedList("0");  // Remainder is 0 if dividend == divisor
         }
         if (dividend->operator<(divisor)){
-            return dividend;  
+            return dividend;  // Remainder is the dividend itself if it's less than the divisor
         }
         LinkedList* a = LinkedList::divide(dividend, divisor);
         LinkedList* b = a->multiply(divisor);
@@ -538,9 +569,11 @@ public:
     }
 
     static LinkedList* power(LinkedList* base, LinkedList* exp){
+        // If exponent is 0, return 1
         if (exp->operator==(0)){
             return new LinkedList("1");
         }
+        // If exponent is 1, return base
         if (exp->operator==(1)){
             return base;
         }
@@ -584,7 +617,7 @@ public:
             this->head = this->head->next; // Move head to the next node
             delete this->head->prev; // Delete the previous node
         }
-    }
+    }                
 };
 
 bool miller_rabin_primality_test(LinkedList* n) {
@@ -633,4 +666,24 @@ bool miller_rabin_primality_test(LinkedList* n) {
     time_t t2 = time(NULL); // End timing the function
     cout << "Time taken: " << t2 - t << " seconds" << endl; // Print time taken
     return false; // n is composite
+}
+
+int main() {
+    string num_to_check; // Variable to store the number to check
+    char cont = 'y'; // Variable to store the user's choice to continue
+    while (cont == 'y'){ // Loop until the user chooses to stop
+        cout << "Enter the number to check for primality: "; // Prompt the user for input
+        getline(cin, num_to_check); // Get the input from the user
+        LinkedList* num = new LinkedList(num_to_check); // Create a LinkedList from the input
+        if (miller_rabin_primality_test(num)){ // Check if the number is prime
+            cout << "Number is prime" << endl; // Print if the number is prime
+        }
+        else{
+            cout << "Number is not prime" << endl; // Print if the number is not prime
+        }
+        cout << "Do you want to continue? (y/n): "; // Ask the user if they want to continue
+        cin >> cont; // Get the user's choice
+        cin.ignore(1000, '\n'); // Ignore the newline character left in the input buffer
+        cin.clear(); // Clear the input buffer
+    }
 }
