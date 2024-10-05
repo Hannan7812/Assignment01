@@ -521,4 +521,68 @@ public:
 
         return result;
     }
+
+    static LinkedList* mod(LinkedList* dividend, LinkedList* divisor){
+        if (dividend->operator==(divisor)){
+            return new LinkedList("0");  
+        }
+        if (dividend->operator<(divisor)){
+            return dividend;  
+        }
+        LinkedList* a = LinkedList::divide(dividend, divisor);
+        LinkedList* b = a->multiply(divisor);
+        LinkedList* result = dividend->subtract(b);
+        delete a;
+        delete b;
+        return result;
+    }
+
+    static LinkedList* power(LinkedList* base, LinkedList* exp){
+        if (exp->operator==(0)){
+            return new LinkedList("1");
+        }
+        if (exp->operator==(1)){
+            return base;
+        }
+
+        LinkedList* result = new LinkedList("1"); // Initialize result as 1
+
+        // Loop until exponent is greater than 0
+        while (exp->operator>(0)){
+            // cout << " exp: ";
+            // exp->printList();
+            // If the least significant digit of exponent is odd
+            if (exp->getNthdigit(0) % 2 == 1){
+                result = result->multiply(base); // Multiply result by base
+            }
+            base = base->multiply(base); // Square the base
+            exp = LinkedList::divide(exp, new LinkedList("2")); // Divide exponent by 2
+        }
+
+        return result; // Return the final result
+    }
+
+    void appendDigit(int digit){
+        string s(this->get_num_digits() + 1, '0'); // Create a string of zeros with length one more than current number of digits
+        LinkedList* temp = new LinkedList(s); // Create a new LinkedList with the string
+        temp->setNthdigit(0, digit); // Set the least significant digit to the new digit
+        for (int i = 0; i < this->get_num_digits(); i++){
+            temp->setNthdigit(i + 1, this->getNthdigit(i)); // Copy existing digits to the new LinkedList
+        }
+        Node* temp_node = this->head; // Temporary node to traverse the list
+        while (this->head != NULL){
+            temp_node = this->head->next; // Move to the next node
+            delete this->head; // Delete the current node
+            this->head = temp_node; // Update head to the next node
+        }
+        delete temp_node; // Delete the temporary node
+        this->head = temp->head; // Update head to the new list's head
+        this->tail = temp->tail; // Update tail to the new list's tail
+
+        // Remove leading zeros
+        while (this->head->data == 0 && this->head->next != NULL){
+            this->head = this->head->next; // Move head to the next node
+            delete this->head->prev; // Delete the previous node
+        }
+    }
 };
