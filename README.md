@@ -6,13 +6,29 @@ The task was to check the primality of 1024 bit numbers. 1024 bit numbers are un
 
 # Assumptions
 ## Task 1
-
+- The processes are added to the list in the order they are created.
+- The calling entity has access to the driver function.
+- There is no priority of one process over the other. All the processes are inserted sequentially.
 
 ## Task 2
-
+- It is assumed that the input will be a positive integer.
+- There is no restriction on the length of the input number i.e it can be any length and the algorithm accomodates numbers which even exceed 1024 bits.
+- It is not strictly necessary to store 64 bit numbers in each node. The node can hold 32 bit numbers as well.
+- It is also assumed that there is no time restriction for the algorithm since very large numbers can take alot of time.
 
 # Challenges
 ## Task 1
 - How to manage the removal of a process from the list once it has completed its execution time.
 
 ## Task 2
+- How to store 1024 bit numbers.
+- The zeroes in the middle of the number such that they are occur at the start of their respective node were difficult to account for since the 'int' data type ignores leading zeroes.
+- How to define the basic arithmetic operations for 1024 bit numbers.
+- How to prevent overflow in the arithmetic operations.
+- How to define comparisons for 1024 bit numbers.
+- How to do exception handling for the arithmetic operations.
+- How to implement the Miller Rabin primality test using the custom arithmetic operations.
+
+## GitHub Link
+[Github Repository](https://github.com/Hannan7812/Assignment01)
+
