@@ -586,3 +586,51 @@ public:
         }
     }
 };
+
+bool miller_rabin_primality_test(LinkedList* n) {
+    time_t t = time(NULL); // Start timing the function
+    if (n->operator==(2) || n->operator==(3)) { // Check if n is 2 or 3
+        return true; // 2 and 3 are prime numbers
+    }
+    if (n->operator<(2) || n->getNthdigit(0) % 2 == 0) { // Check if n is less than 2 or even
+        return false; // Numbers less than 2 and even numbers are not prime
+    }
+
+    LinkedList* d = n->subtract(new LinkedList("1")); // d = n - 1
+    int k = 0; // Initialize k to 0
+    while (d->getNthdigit(0) % 2 == 0) { // While d is even
+        d = LinkedList::divide(d, new LinkedList("2")); // d = d / 2
+        k++; // Increment k
+    }
+    // cout << "k: " << k << endl;
+    // d->printList();
+
+    LinkedList* a =  new LinkedList("2"); // Initialize a to 2
+    // cout << "a: ";
+    // a->printList();
+    LinkedList* x = LinkedList::mod(LinkedList::power(a, d), n); // x = (a^d) % n
+    
+    if (x->operator==(1) || x->operator==(n->subtract(new LinkedList("1")))) { // Check if x is 1 or n-1
+        time_t t2 = time(NULL); // End timing the function
+        cout << "Time taken: " << t2 - t << " seconds" << endl; // Print time taken
+        return true; // n is probably prime
+    }
+
+    for (int i = 0; i < k - 1; i++) { // Repeat k-1 times
+        // cout << "i: " << i << endl;
+        x = LinkedList::mod(x->multiply(x), n); // x = (x^2) % n
+        if (x->operator==(1)) { // Check if x is 1
+            time_t t2 = time(NULL); // End timing the function
+            cout << "Time taken: " << t2 - t << " seconds" << endl; // Print time taken
+            return false; // n is composite
+        }
+        if (x->operator==(n->subtract(new LinkedList("1")))) { // Check if x is n-1
+            time_t t2 = time(NULL); // End timing the function
+            cout << "Time taken: " << t2 - t << " seconds" << endl; // Print time taken
+            return true; // n is probably prime
+        }
+    }
+    time_t t2 = time(NULL); // End timing the function
+    cout << "Time taken: " << t2 - t << " seconds" << endl; // Print time taken
+    return false; // n is composite
+}
