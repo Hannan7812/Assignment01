@@ -297,4 +297,138 @@ public:
         }
         cout << endl;
     }
+
+    void add_to_this_linked_list(LinkedList* list){
+        Node* temp1 = this->tail;
+        Node* temp2 = list->tail;
+        int carry = 0;
+        while (temp1 != NULL && temp2 != NULL){
+            int sum = 0;
+            for (int i = 0; i < 9; i++){
+                int digit1 = temp1->getNthDigit(i);
+                int digit2 = temp2->getNthDigit(i);
+                sum = digit1 + digit2 + carry;
+                if (sum > 9){
+                    carry = 1;
+                    sum = sum - 10;
+                }
+                else{
+                    carry = 0;
+                }
+                temp1->setNthDigit(i, sum);
+            }
+            temp1 = temp1->prev;
+            temp2 = temp2->prev;
+        }
+        
+        while (temp2 != NULL){
+            if (carry){
+                this->prependNode(temp2->data + 1);
+                carry = 0;
+            }
+            else{
+                this->prependNode(temp2->data);
+            }
+            this->prependNode(temp2->data);
+            temp2 = temp2->prev;
+        }
+    }
+
+    int getNthdigit(int n){
+        if (n >= this->get_num_digits()){
+            return 0;
+        }
+        Node* temp = this->tail;
+        int loc_within_node = n % 9;
+        int node_number = n / 9;
+        for (int i = 0; i < node_number; i++){
+            temp = temp->prev;
+        }
+        return temp->getNthDigit(loc_within_node);
+    }
+
+    void setNthdigit(int n, int digit){
+        Node* temp = this->tail;
+        int loc_within_node = n % 9;
+        int node_number = n / 9;
+        for (int i = 0; i < node_number; i++){
+            temp = temp->prev;
+        }
+        temp->setNthDigit(loc_within_node, digit);
+    }
+
+    LinkedList* add_linked_list(LinkedList* list){
+        int l1 = this->get_num_digits();
+        int l2 = list->get_num_digits();
+        int to_ret_len = 0;
+
+        if (l1 > l2){
+            to_ret_len = l1;
+        }
+        else{
+            to_ret_len = l2;
+        }
+        string s(to_ret_len+1, '0');
+        LinkedList* to_ret = new LinkedList(s);
+        int carry = 0;
+        for (int i = 0; i < to_ret->get_num_digits(); i++){
+            int dig1 = this->getNthdigit(i);
+            int dig2 = list->getNthdigit(i);
+            int res = dig1 + dig2 + carry;
+            carry = res / 10;
+            to_ret->setNthdigit(i, res % 10);
+        }
+        while (to_ret->head->data == 0){
+            to_ret->head = to_ret->head->next;
+            delete to_ret->head->prev;
+        }
+        return to_ret;
+    }
+
+    int get_num_digits(){
+        int count = 0;
+        Node* temp = this->head;
+        while (temp != NULL){
+            count += 9;
+            temp = temp->next;
+        }
+        return count;
+    }
+
+    LinkedList* subtract(LinkedList* list){
+        int l1 = this->get_num_digits();
+        int l2 = list->get_num_digits();
+        if (l1 < l2){
+            cout << "First number is smaller than second number" << endl;
+            throw invalid_argument("First number is smaller than second number");
+        }
+        int to_ret_len = 0;
+        if (l1 > l2){
+            to_ret_len = l1;
+        }
+        else{
+            to_ret_len = l2;
+        }
+        string s(to_ret_len, '0');
+        LinkedList* to_ret = new LinkedList(s);
+        int borrow = 0;
+        for (int i = 0; i < to_ret_len; i++){
+            int dig1 = this->getNthdigit(i);
+            int dig2 = list->getNthdigit(i);
+            int res = dig1 - dig2 - borrow;
+            if (res < 0){
+                borrow = 1;
+                res += 10;
+            }
+            else{
+                borrow = 0;
+            }
+            to_ret->setNthdigit(i, res);
+        }
+        while (to_ret->head->data == 0 && to_ret->head->next != NULL){
+            to_ret->head = to_ret->head->next;
+            delete to_ret->head->prev;
+        }
+        return to_ret;
+    }
 };
