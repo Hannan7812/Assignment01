@@ -431,4 +431,94 @@ public:
         }
         return to_ret;
     }
+
+    // Method to multiply two linked lists and return the result
+    LinkedList* multiply(LinkedList* list) {
+        int n1 = this->get_num_digits();
+        int n2 = list->get_num_digits();
+        int totalDigits = n1 + n2;
+        
+        // Use an array to store results
+        int* result = new int[totalDigits]();  // Initialize to 0
+
+        // Convert linked list digits to arrays
+        int* num1 = new int[n1];
+        int* num2 = new int[n2];
+        
+        for (int i = 0; i < n1; i++) {
+            num1[i] = this->getNthdigit(n1 - i - 1);
+        }
+        for (int j = 0; j < n2; j++) {
+            num2[j] = list->getNthdigit(n2 - j - 1);
+        }
+
+        // Multiply
+        for (int i = n1 - 1; i >= 0; i--) {
+            for (int j = n2 - 1; j >= 0; j--) {
+                int mul = num1[i] * num2[j];
+                int sum = mul + result[i + j + 1];
+                result[i + j + 1] = sum % 10; // Current digit
+                result[i + j] += sum / 10; // Carry
+            }
+        }
+
+        // Create the final linked list from the result array
+        LinkedList* finalResult = new LinkedList();
+        bool leadingZero = true; // Flag to skip leading zeros
+
+        for (int i = 0; i < totalDigits; i++) {
+            if (result[i] != 0) {
+                leadingZero = false; // Found a non-zero digit
+            }
+            if (!leadingZero) {
+                finalResult->appendDigit(result[i]);
+            }
+        }
+
+        // Cleanup
+        delete[] num1;
+        delete[] num2;
+        delete[] result;
+
+        return finalResult;
+    }
+
+    // Static method to divide one linked list by another and return the result
+    static LinkedList* divide(LinkedList* dividend, LinkedList* divisor){
+        if (dividend->operator==(divisor)){
+            return new LinkedList("1");
+        }
+        if (dividend->operator<(divisor)){
+            return new LinkedList("0");
+        }
+        int l1 = dividend->get_num_digits();
+        int l2 = divisor->get_num_digits();
+        int to_ret_len;
+        if (l1 < l2){
+            return new LinkedList("0");
+        }
+        else{
+            to_ret_len = l1;
+        }
+        string s(to_ret_len, '0');
+        LinkedList* result = new LinkedList(s);
+        LinkedList* current = new LinkedList();
+
+        for (int i = 0; i < l1; i++){
+            current->appendDigit(dividend->getNthdigit(dividend->get_num_digits() - i - 1));
+            int x = 0;
+            while (current->operator>(divisor) || current->operator==(divisor)){
+                current = current->subtract(divisor);
+                x++;
+            }
+            result->setNthdigit(result->get_num_digits() - i - 1, x);
+        }
+
+        while (result->head->data == 0){
+            result->head = result->head->next;
+            delete result->head->prev;
+        }
+
+        return result;
+    }
 };
